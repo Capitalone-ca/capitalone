@@ -89,10 +89,7 @@ body
 .auth-page{display:flex;min-height:80vh;align-items:center;justify-content:center}
 .auth-card{max-width:420px;width:100%;text-align:center}
 .auth-card .logo-sm{margin-bottom:6px}
-.grid {
-  display: grid;
-  gap: 20px;
-}
+
 .grid-2 {
   grid-template-columns: repeat(2, 1fr);
 }
@@ -242,21 +239,21 @@ body
   }
 }
 
-
+/* 
 @media(max-width: 1024px){
   .grid-3 {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+} */
 
-
+/* 
 @media(max-width: 768px){
   .grid-3,
   .grid-2 {
     width: 100%;
     grid-template-columns: 1fr;
   }
-}
+} */
 
     @media(max-width: 480px){
   .topbar-left h1 {
