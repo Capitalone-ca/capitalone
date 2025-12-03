@@ -105,15 +105,15 @@ body
 .tx-amt.neg{color:var(--red)}
 
 /* topbar/sidebar */
-.app-shell{display:flex;min-height:100vh}
-.sidebar {
+/* .app-shell{display:flex;min-height:100vh} */
+/* .sidebar {
   width: 250px;
   min-width: 250px;
   background: #fff;
   border-right: 1px solid #e6e6e6;
   padding: 20px 10px;
   position: relative;
-}
+} */
 .nav{display:flex;flex-direction:column;gap:8px; background-color: #0033a0; color: #e6edf8;}
 .nav-item{display:block;padding:10px;border-radius:10px;color:var(--muted);text-decoration:none}
 /* .nav-item.active{background:linear-gradient(90deg,var(--glass),transparent);color:var(--blue);font-weight:700} */
