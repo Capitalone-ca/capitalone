@@ -16,19 +16,6 @@
 
     .profile { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-    .logout-btn {
-      margin-top: 6px;
-      background: #0033a0;
-      color: #e6e6e6;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: 0.3s;
-      width: 100%;
-      text-align: left;
-    }
 
     .cardo a {
         color: #0033a0;
@@ -61,20 +48,32 @@ html, body {
 .sidebar {
     width: 238px;
     min-width: 238px;
+    height: 100vh;
     background: linear-gradient(180deg, #0033A0, #00236a);
     color: #fff;
-    height: 100vh;
+
     position: fixed;
-    left: 0;
     top: 0;
+    left: 0;
+
     display: flex;
     flex-direction: column;
+
+    /* IMPORTANT: prevent whole sidebar from scrolling */
     overflow: hidden;
 }
-
 .sidebar-top {
-    padding: 16px;
+    padding: 20px 0;
+    text-align: center;
     flex-shrink: 0;
+}
+
+
+.sidebar-content {
+    flex: 1;                        /* consume available height */
+    overflow-y: scroll;             /* enable scrolling */
+    -webkit-overflow-scrolling: touch; /* smooth scroll for iPhone */
+    padding-bottom: 20px;
 }
 
 .sidebar-top img {
@@ -83,19 +82,18 @@ html, body {
 
 /* NAV ITEMS */
 .nav {
-    flex: 1;                       
-    overflow-y: auto;              
-    padding-bottom: 40px;
-    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
 }
 
+
 .nav-item {
-  padding: 14px 24px;
-  font-size: 15px;
-  color: #e3e6ef;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  border-left: 4px solid transparent;
+    padding: 14px 24px;
+    font-size: 15px;
+    color: #e3e6ef;
+    text-decoration: none;
+    transition: 0.25s;
+    border-left: 4px solid transparent;
 }
 
 .nav::-webkit-scrollbar {
@@ -104,28 +102,28 @@ html, body {
 }
 
 .nav-item:hover {
-  background: rgba(255,255,255,0.08);
-  padding-left: 32px;
+    background: rgba(255,255,255,0.10);
+    padding-left: 32px;
 }
 
 .nav-item.active {
-  background: rgba(255,255,255,0.14);
-  border-left: 4px solid #ff3b30;
-  font-weight: 600;
+    background: rgba(255,255,255,0.18);
+    font-weight: 600;
+    border-left: 4px solid #ff3b30;
+}
+.logout-btn {
+    width: 100%;
+    padding: 12px 10px;
+    background: #ff3b30;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 15px;
 }
 
-.logout-btn {
-  margin: 22px 18px 0;
-  background: #0033a0;
-  color: #fff;
-  /* padding: 10px 14px; */
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  /* text-align: center; */
-  transition: 0.25s ease;
-    flex-shrink: 0;                /* stays at bottom and doesn't scroll away */
-
+.logout-wrapper {
+    flex-shrink: 0;
+    padding: 20px;
 }
 
 .logout-btn:hover {
@@ -334,24 +332,35 @@ html, body {
   <div class="loader-container" id="globalLoader"><div class="loader"></div></div>
 
   <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-top">
-        <img src="../medias/image/Capital_One_logo.svg.png" alt="logo" class="logo-sm">
-      </div>
-      <nav class="nav">
-        <a href="./dashboard.html" class="nav-item active">Home</a>
-        <a href="./accounts.html" class="nav-item">Accounts</a>
-        <a href="./transaction.html" class="nav-item">Transactions</a>
-        <a href="./transfer.html" class="nav-item">Transfer</a>
-        <a href="./zelle.html" class="nav-item">Zelle</a>
-        <a href="./pay-bills.html" class="nav-item">Pay bills</a>
-        <a href="./deposit.html" class="nav-item">Deposit check</a>
-        <a href="./notification.html" class="nav-item">Notifications</a>
-        <a href="./setting.html" class="nav-item">Settings</a>
-        <a href="./help.html" class="nav-item">Support</a>
+   <aside class="sidebar">
+    
+    <div class="sidebar-top">
+        <img src="../medias/image/Capital_One_logo.svg.png" class="logo-sm">
+    </div>
+
+    <!-- SCROLLABLE AREA -->
+    <div class="sidebar-content">
+        <nav class="nav">
+            <a href="./dashboard.html" class="nav-item active">Home</a>
+            <a href="./accounts.html" class="nav-item">Accounts</a>
+            <a href="./transaction.html" class="nav-item">Transactions</a>
+            <a href="./transfer.html" class="nav-item">Transfer</a>
+            <a href="./zelle.html" class="nav-item">Zelle</a>
+            <a href="./pay-bills.html" class="nav-item">Pay bills</a>
+            <a href="./deposit.html" class="nav-item">Deposit check</a>
+            <a href="./notification.html" class="nav-item">Notifications</a>
+            <a href="./setting.html" class="nav-item">Settings</a>
+            <a href="./help.html" class="nav-item">Support</a>
+        </nav>
+    </div>
+
+    <!-- FIXED LOGOUT AT BOTTOM -->
+    <div class="logout-wrapper">
         <button class="logout-btn" onclick="signOutUser()">Logout</button>
-      </nav>
-    </aside>
+    </div>
+
+</aside>
+
 
     <main class="main">
       <header class="topbar">
