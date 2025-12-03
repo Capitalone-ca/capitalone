@@ -58,15 +58,38 @@ html, body {
 
     display: flex;
     flex-direction: column;
-
-    /* IMPORTANT: prevent whole sidebar from scrolling */
     overflow: hidden;
+    width: 240px;
+    transition: width 0.3s ease;
 }
+
+.sidebar .nav {
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+
 .sidebar-top {
     padding: 20px 0;
     text-align: center;
     flex-shrink: 0;
 }
+
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar.collapsed .nav-item {
+    padding-left: 10px;
+    font-size: 0; /* hide text */
+}
+
+.sidebar.collapsed .nav-item::before {
+    font-size: 18px;
+}
+
 
 
 .sidebar-content {
@@ -124,7 +147,22 @@ html, body {
     padding-left: 24px;
     cursor: pointer;
     transition: 0.2s ease-in-out;
+    /* margin-top: 12px; */
+    /* width: 100%; */
 }
+
+.toggle-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    background: #0033A0;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    z-index: 9999;
+}
+
 .logout-wrapper {
     flex-shrink: 0;
     padding: 20px;
@@ -337,32 +375,32 @@ html, body {
   <div class="loader-container" id="globalLoader"><div class="loader"></div></div>
 
   <div class="app-shell">
-   <aside class="sidebar">
-
+   <!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
-        <img src="../medias/image/Capital_One_logo.svg.png" class="logo-sm">
+        <img src="../medias/image/Capital_One_logo.svg.png" class="logo-sm" alt="logo">
     </div>
 
-    <!-- SCROLLABLE AREA INCLUDING LOGOUT -->
-    <div class="sidebar-content">
-        <nav class="nav">
-            <a href="./dashboard.html" class="nav-item active">Home</a>
-            <a href="./accounts.html" class="nav-item">Accounts</a>
-            <a href="./transaction.html" class="nav-item">Transactions</a>
-            <a href="./transfer.html" class="nav-item">Transfer</a>
-            <a href="./zelle.html" class="nav-item">Zelle</a>
-            <a href="./pay-bills.html" class="nav-item">Pay bills</a>
-            <a href="./deposit.html" class="nav-item">Deposit check</a>
-            <a href="./notification.html" class="nav-item">Notifications</a>
-            <a href="./setting.html" class="nav-item">Settings</a>
-            <a href="./help.html" class="nav-item">Support</a>
+    <nav class="nav">
+        <a href="./dashboard.html" class="nav-item active">Home</a>
+        <a href="./accounts.html" class="nav-item">Accounts</a>
+        <a href="./transaction.html" class="nav-item">Transactions</a>
+        <a href="./transfer.html" class="nav-item">Transfer</a>
+        <a href="./zelle.html" class="nav-item">Zelle</a>
+        <a href="./pay-bills.html" class="nav-item">Pay bills</a>
+        <a href="./deposit.html" class="nav-item">Deposit check</a>
+        <a href="./notification.html" class="nav-item">Notifications</a>
+        <a href="./setting.html" class="nav-item">Settings</a>
+        <a href="./help.html" class="nav-item">Support</a>
 
-            <!-- LOGOUT DIRECTLY BELOW SUPPORT -->
-            <button class="logout-btn" onclick="signOutUser()">Logout</button>
-        </nav>
-    </div>
-
+        <!-- 🔥 Logout button ALWAYS visible at bottom -->
+        <button class="logout-btn">Logout</button>
+    </nav>
 </aside>
+
+<!-- TOPBAR BUTTON -->
+<button id="toggleSidebar" class="toggle-btn">☰</button>
+
 
 
     <main class="main">
@@ -472,6 +510,13 @@ function resetTimer() {
 
 // Start timer immediately
 resetTimer();
+</script>
+
+<script>
+document.getElementById("toggleSidebar").addEventListener("click", () => {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.classList.toggle("collapsed");
+});
 </script>
 
 </body>
