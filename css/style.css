@@ -76,7 +76,7 @@ body
 
 /* forms */
 .form label{display:block;margin-bottom:10px;font-size:14px}
-.form input[type="text"], .form input[type="email"], .form input[type="password"], .form input[type="number"], .form select, .form input[type="file"]{
+.form input[type="text"], .form input[type="email"], .form input[type="password"],.forrm input .form input[type="number"], .form select, .form input[type="file"]{
   width:100%;padding:10px;border-radius:10px;border:1px solid #e6edf8;background:transparent;
   outline:none;font-size:14px;margin-top:6px;
 }

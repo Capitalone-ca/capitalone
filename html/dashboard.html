@@ -70,6 +70,8 @@ html, body {
   overflow-y: auto;
   padding: 10px 0 50px;
   box-shadow: 3px 0 8px rgba(0,0,0,0.22);
+  overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-top {
@@ -110,13 +112,13 @@ html, body {
 
 .logout-btn {
   margin: 22px 18px 0;
-  background: #ff3b30;
+  background: #0033a0;
   color: #fff;
-  padding: 10px 14px;
+  /* padding: 10px 14px; */
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  text-align: center;
+  /* text-align: center; */
   transition: 0.25s ease;
 }
 
@@ -131,6 +133,15 @@ html, body {
   margin-left: 238px;
   width: calc(100% - 238px);
   padding: 25px 20px 60px;
+  height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sidebar::-webkit-scrollbar,
+.main::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
 }
 
 /* TOP BAR */
@@ -345,7 +356,7 @@ html, body {
         <div class="topbar-right">
           
           <div class="profile">
-            <img src="../medias/image/Capital_One_logo.svg.png" alt="" class="avatar">
+            <img src="../medias/image/Capital_One_l" alt="img" class="avatar">
             <div class="profile-info">
               <div class="name" id="userName">User</div>
               
@@ -365,7 +376,7 @@ html, body {
 
           <div class="card chart-card">
             <h3 class="">Track your credit score for free with Credit Keeper
-Learn what impacts your score with our free online tool.</h3>
+          Learn what impacts your score with our free online tool.</h3>
                 <div class="cardo"><a href="">learn more</a></div>
             <div id="spendChart" class="chart"></div>
           </div>

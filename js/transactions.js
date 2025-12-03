@@ -13,6 +13,7 @@ const mockHistory = [
 ];
 
 // Render into table
+// Render into table
 function renderTransactions() {
   const tbody = document.getElementById("txBody");
   if (!tbody) return;
@@ -22,13 +23,15 @@ function renderTransactions() {
     const amt = tx.amount;
     const amountHtml = `${amt > 0 ? '+' : ''}$${Math.abs(amt).toFixed(2)}`;
     const amtClass = amt > 0 ? 'tx-credit' : 'tx-debit';
+
     tr.innerHTML = `
       <td>${tx.date}</td>
       <td>${tx.desc}</td>
       <td>${tx.type}</td>
       <td class="${amtClass}">${amountHtml}</td>
-      <td>$${tx.balance.toFixed(2)}</td>
     `;
+    // ⛔ Balance column removed completely
+
     tbody.appendChild(tr);
   });
 
