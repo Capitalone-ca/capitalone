@@ -30,7 +30,7 @@ function renderTransactions() {
       <td>${tx.type}</td>
       <td class="${amtClass}">${amountHtml}</td>
     `;
-    // ⛔ Balance column removed completely
+    
 
     tbody.appendChild(tr);
   });
