@@ -394,7 +394,7 @@ html, body {
         <a href="./help.html" class="nav-item">Support</a>
 
         <!-- 🔥 Logout button ALWAYS visible at bottom -->
-        <button class="logout-btn" onclick="signOutUser()">Logout</button>
+        <button class="logout-btn" onclick="signOutUser()" id="logoutBtn">Logout</button>
 
     </nav>
 </aside>
@@ -517,6 +517,26 @@ resetTimer();
 document.getElementById("toggleSidebar").addEventListener("click", () => {
     const sidebar = document.getElementById("sidebar");
     sidebar.classList.toggle("collapsed");
+});
+</script>
+
+<script>
+const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", () => {
+
+    // Show loader
+    document.getElementById("globalLoader").style.display = "flex";
+
+    // Delay 1.5 seconds before logging out
+    setTimeout(() => {
+        firebase.auth().signOut().then(() => {
+            window.location.href = "index.html";
+        }).catch(err => {
+            console.error(err);
+            alert("Error logging out");
+        });
+    }, 1500);
 });
 </script>
 

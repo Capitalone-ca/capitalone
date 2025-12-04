@@ -119,7 +119,7 @@
     <div class="notif-text">
       <div class="title">Deposit Received</div>
       <div class="desc">Your $1,500 deposit is now available.</div>
-      <div class="date">Feb 28, 9:42 AM</div>
+      <div class="date">Mar 2019, 9:42 AM</div>
     </div>
   </div>
 
@@ -128,7 +128,7 @@
     <div class="notif-text">
       <div class="title">Zelle Transfer</div>
       <div class="desc">You sent $200 to Michael Reed.</div>
-      <div class="date">Feb 28, 8:10 AM</div>
+      <div class="date">Mar 2019, 8:10 AM</div>
     </div>
   </div>
 
@@ -140,7 +140,7 @@
     <div class="notif-text">
       <div class="title">New Transaction</div>
       <div class="desc">Walmart purchase — $42.71</div>
-      <div class="date">Feb 26</div>
+      <div class="date">Feb 2019, 2:33 PM</div>
     </div>
   </div>
 
@@ -149,7 +149,7 @@
     <div class="notif-text">
       <div class="title">Zelle Received</div>
       <div class="desc">Sarah sent you $120 via Zelle.</div>
-      <div class="date">Feb 25</div>
+      <div class="date">Feb 2019, 10:03 PM</div>
     </div>
   </div>
 
@@ -158,7 +158,7 @@
     <div class="notif-text">
       <div class="title">Card Charge</div>
       <div class="desc">Apple Subscription — $14.99</div>
-      <div class="date">Feb 24</div>
+      <div class="date">Feb 2019, 12:53 PM</div>
     </div>
   </div>
 
@@ -170,7 +170,7 @@
     <div class="notif-text">
       <div class="title">Direct Deposit</div>
       <div class="desc">Payroll deposit $2,100 posted.</div>
-      <div class="date">Feb 20</div>
+      <div class="date">Feb 2019, 2:33 PM</div>
     </div>
   </div>
 
@@ -178,8 +178,8 @@
     <div class="notif-icon icon-red">⚠️</div>
     <div class="notif-text">
       <div class="title">Security Alert</div>
-      <div class="desc">New login from iPhone 13, Lagos.</div>
-      <div class="date">Feb 18</div>
+      <div class="desc" id="loginNotif">Detecting device and location…</div>
+      <div class="date">Feb 2019, 1:20 PM</div>
     </div>
   </div>
 
@@ -190,6 +190,84 @@
       window.location.href = "dashboard.html";
     }
   </script>
+<script>
+// Detect device model
+function getDeviceName() {
+    const ua = navigator.userAgent;
 
+    if (/iPhone/i.test(ua)) {
+        if (ua.includes("iPhone14")) return "iPhone 14";
+        if (ua.includes("iPhone13")) return "iPhone 13";
+        if (ua.includes("iPhone12")) return "iPhone 12";
+        return "iPhone";
+    }
+    if (/iPad/i.test(ua)) return "iPad";
+
+    if (/Android/i.test(ua)) {
+        const match = ua.match(/Android.*?;\s*(.*?)\s*(Build|;)/);
+        return match ? match[1] : "Android Device";
+    }
+
+    if (/Windows/i.test(ua)) return "Windows PC";
+    if (/Macintosh/i.test(ua)) return "MacBook";
+    if (/Linux/i.test(ua)) return "Linux Device";
+
+    return "Unknown Device";
+}
+
+
+// Get user’s location
+function getLocation(callback) {
+    if (!navigator.geolocation) {
+        callback(null);
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            callback({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+            });
+        },
+        () => callback(null)
+    );
+}
+
+
+// Reverse Geocode → Convert lat/lng to State + Country
+async function getAddress(lat, lng) {
+    try {
+        const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const state = data.principalSubdivision || "Unknown State";
+        const country = data.countryName || "Unknown Country";
+
+        return `${state}, ${country}`;
+    } catch {
+        return "Unknown Location";
+    }
+}
+
+
+// Build final login notification message
+window.addEventListener("DOMContentLoaded", () => {
+    const device = getDeviceName();
+
+    getLocation(async (coords) => {
+        let locationText = "Unknown Location";
+
+        if (coords) {
+            locationText = await getAddress(coords.lat, coords.lng);
+        }
+
+        document.getElementById("loginNotif").innerText =
+            `New login from ${device}, ${locationText}.`;
+    });
+});
+</script>
 </body>
 </html>
