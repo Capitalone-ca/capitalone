@@ -5,383 +5,119 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dashboard — CapitalOne</title>
 
+  <!-- keep your existing styles -->
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/dashboard.css">
   <link rel="stylesheet" href="../css/loader.css">
   <link rel="stylesheet" href="../css/dark.css">
 
+  <!-- small targeted overrides & new component styles -->
   <style>
-    /* Responsive Fixes */
-    .topbar { display: flex; align-items: center; justify-content: space-between; }
-
-    .profile { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-
-    .cardo a {
-        color: #0033a0;
-        text-decoration: none;
+    /* --- Base adjustments --- */
+    :root {
+      --accent: #0033A0;
+      --accent-dark: #00236a;
+      --muted: #6b7280;
+      --card-bg: #fff;
+      --page-bg: #f6f7fb;
+      --mobile-max: 420px;
     }
 
-/* ======================================
-   CAPITAL ONE PREMIUM UI UPGRADE
-   Fully redesigned layout + fixed sidebar
-   ====================================== */
+    /* unify font and background */
+    html,body { font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif; background: var(--page-bg); margin:0; padding:0; -webkit-font-smoothing:antialiased; }
+    .app-shell { min-height:100vh; }
 
-/* Reset overflow */
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-  font-family: "Inter", "Segoe UI", sans-serif;
-}
+    /* --- Hide native sidebar on small screens (B: mobile-first app UI) --- */
+    @media (max-width: 992px) {
+      .sidebar { transform: translateX(-110%); visibility: hidden; width: 0; min-width:0; }
+      .toggle-btn { display: none; } /* hide toggle on small screens, mobile uses bottom nav */
+      .main { margin-left: 0 !important; width: 100% !important; padding: 12px 12px 90px; } /* ensure full width */
+    }
 
-/* APP WRAPPER */
-.app-shell {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
-  background: #f6f7fb;
-}
+    /* On large screens keep the sidebar (unchanged) */
+    @media (min-width: 993px) {
+      /* keep existing main spacing on desktop */
+      .main { margin-left: 238px; width: calc(100% - 238px); padding: 25px 20px 60px; height:100vh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+    }
 
-/* ==========================
-   SIDEBAR — Capital One Style
-   ========================== */
-.sidebar {
-    width: 238px;
-    min-width: 238px;
-    height: 100vh;
-    background: linear-gradient(180deg, #0033A0, #00236a);
-    color: #fff;
+    /* --- CapitalOne-style mobile app layout inside your main --- */
+    .co-app { max-width: 420px; margin: 0 auto; display:flex; flex-direction:column; gap:12px; }
 
-    position: fixed;
-    top: 0;
-    left: 0;
+    /* header */
+    .co-header { display:flex; align-items:center; padding:14px 6px 6px; gap:10px; }
+    .co-logo { width:120px; height:auto; display:block; }
+    .co-avatar { margin-left:auto; width:36px; height:36px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; background:#fff; }
 
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    width: 240px;
-    transition: width 0.3s ease;
-}
+    /* stacked cards */
+    .card-stack { display:flex; flex-direction:column; gap:12px; padding:0 6px; }
+    .co-cc { border-radius:12px; padding:16px; color:#fff; display:flex; justify-content:space-between; align-items:flex-start; min-height:84px; box-shadow:0 6px 18px rgba(11,20,40,0.06); border:1px solid rgba(0,0,0,0.04); }
+    .co-cc .left { display:flex; flex-direction:column; gap:6px; }
+    .co-cc .brand { font-weight:700; letter-spacing:1px; font-size:16px; }
+    .co-cc .last { font-size:13px; opacity:0.9; }
+    .co-cc .amount { font-weight:800; font-size:20px; text-align:right; }
+    .co-cc .label { font-size:12px; opacity:0.95; text-align:right; }
 
-.sidebar .nav {
-    max-height: calc(100vh - 140px);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
+    .co-savor { background: linear-gradient(180deg,#c94b44,#b03628); }
+    .co-venture { background: linear-gradient(180deg,#0b3a53,#042033); }
 
+    .virtual-btn { border:1px solid rgba(255,255,255,0.18); background:transparent; color:#fff; padding:8px 10px; border-radius:8px; font-weight:600; font-size:13px; }
 
-.sidebar-top {
-    padding: 20px 0;
-    text-align: center;
-    flex-shrink: 0;
-}
+    /* open new account tile */
+    .open-account { display:flex; align-items:center; gap:12px; background:#fff; padding:12px; border-radius:10px; border:1px solid #e7edf2; margin:0 6px; cursor:pointer; }
 
+    /* rewards card */
+    .rewards-card { margin:0 6px; padding:16px; border-radius:12px; background:linear-gradient(180deg,#0baea3,#0b7f85); color:#fff; display:flex; flex-direction:column; gap:8px; }
+    .rewards-amount { font-weight:800; font-size:28px; }
+    .rewards-sub { font-size:13px; opacity:0.95; }
+    .rewards-cats { display:flex; gap:12px; margin-top:8px; justify-content:space-between; }
 
-.sidebar.collapsed {
-    width: 70px;
-}
+    /* creditwise */
+    .creditwise { background:#fff; padding:14px; border-radius:12px; border:1px solid #eef2f6; margin:0 6px; display:flex; flex-direction:column; gap:8px; }
+    .cw-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .cw-score { font-size:36px; font-weight:800; color:#0b7a33; }
+    .cw-meta { display:flex; flex-direction:column; gap:4px; }
 
-.sidebar.collapsed .nav-item {
-    padding-left: 10px;
-    font-size: 0; /* hide text */
-}
+    /* content grid for larger screens */
+    @media(min-width:993px){
+      .co-grid { display:grid; grid-template-columns: 1fr 380px; gap:14px; align-items:start; padding:0 12px; }
+      .co-left { display:flex; flex-direction:column; gap:12px; }
+      .co-right { display:flex; flex-direction:column; gap:12px; }
+    }
 
-.sidebar.collapsed .nav-item::before {
-    font-size: 18px;
-}
+    /* quick actions tiles */
+    .quick-actions { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:0 6px; }
+    .action-tile { background:#fff; padding:12px; border-radius:10px; border:1px solid #eef2f6; text-align:left; cursor:pointer; }
 
+    /* bottom nav (mobile) */
+    .co-bottom-nav { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid #eee; display:flex; justify-content:space-around; padding:8px 6px; gap:6px; max-width:420px; margin:0 auto; z-index:1000; }
+    .co-nav-item { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:#4b5563; text-decoration:none; font-size:12px; }
+    .co-nav-item.active { color:var(--accent); font-weight:700; }
 
+    /* small helpers */
+    .muted { color:var(--muted); font-size:13px; }
+    .section-title { font-weight:700; font-size:14px; margin:0; }
 
-.sidebar-content {
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 40px;
-    -webkit-overflow-scrolling: touch;
-}
+    /* Chart placeholder sizing */
+    #spendChart { height:84px !important; width:100% !important; }
 
-.sidebar-top img {
-  width: 140px;
-}
-
-/* NAV ITEMS */
-.nav {
-    display: flex;
-    flex-direction: column;
-}
-
-
-.nav-item {
-    padding: 14px 24px;
-    font-size: 15px;
-    color: #e3e6ef;
-    text-decoration: none;
-    transition: 0.25s;
-    border-left: 4px solid transparent;
-}
-
-.nav::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-}
-
-.nav-item:hover {
-    background: rgba(255,255,255,0.10);
-    padding-left: 32px;
-}
-
-.nav-item.active {
-    background: rgba(255,255,255,0.18);
-    font-weight: 600;
-    border-left: 4px solid #ff3b30;
-}
-.logout-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: #0033a0;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 15px;
-    text-align: left;
-    padding-left: 24px;
-    cursor: pointer;
-    transition: 0.2s ease-in-out;
-    /* margin-top: 12px; */
-    /* width: 100%; */
-}
-
-.toggle-btn {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    background: #0033A0;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 14px;
-    z-index: 9999;
-}
-
-.logout-wrapper {
-    flex-shrink: 0;
-    padding: 20px;
-}
-
-.logout-btn:hover {
-    background: rgba(255,255,255,0.10);
-    padding-left: 32px;
-}
-
-/* ==========================
-   MAIN CONTENT
-   ========================== */
-.main {
-  margin-left: 238px;
-  width: calc(100% - 238px);
-  padding: 25px 20px 60px;
-  height: 100vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.sidebar::-webkit-scrollbar,
-.main::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-}
-
-/* TOP BAR */
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-}
-
-.page-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #0033A0;
-}
-
-/* PROFILE */
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile-info .name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #111;
-}
-
-/* AVATAR */
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 2px solid #0033A0;
-  background: #fff;
-}
-
-/* ==========================
-   CARDS
-   ========================== */
-.card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-  border: 1px solid #e8e8e8;
-}
-
-.card h3 {
-  font-size: 17px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #0033A0;
-}
-
-.big {
-  font-size: 32px;
-  font-weight: 700;
-  color: #0a0a0a;
-}
-
-.mini {
-  font-size: 14px;
-  color: #666;
-}
-
-/* Actions tiles */
-.tile {
-  display: block;
-  padding: 14px;
-  background: #0033A0;
-  color: #fff;
-  text-decoration: none;
-  text-align: center;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.tile:hover {
-  background: #00236a;
-}
-
-/* ==========================
-   GRID SYSTEM
-   ========================== */
-.grid {
-  display: grid;
-  gap: 18px;
-}
-
-.grid-3 {
-  grid-template-columns: 1fr 1fr;
-}
-
-.grid-2 {
-  grid-template-columns: 1fr 1fr;
-}
-
-/* ==========================
-   RESPONSIVE TUNING
-   ========================== */
-
-/* Very Small Phones (iPhone SE, Samsung A01, etc) */
-.actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-/* FIX: On screens under 480px, show actions in 2 columns */
-@media (max-width: 480px) {
-  .actions {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-/* FIX: On screens under 370px, show actions in 1 column */
-@media (max-width: 414px) {
-  .actions {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-
-@media (max-width: 480px) {
-  .sidebar {
-    width: 180px;
-    min-width: 180px;
-  }
-  .main {
-    margin-left: 180px;
-    width: calc(100% - 180px);
-  }
-  .page-title {
-    font-size: 20px;
-  }
-  .grid-3,
-  .grid-2 {
-    grid-template-columns: 1fr;
-  }
-  .big {
-    font-size: 26px;
-  }
-  .card {
-    padding: 16px;
-  }
-}
-
-@media (max-width: 414px) {
-  .sidebar {
-    width: 150px !important;
-    min-width: 150px !important;
-  }
-  .main {
-    margin-left: 160px !important;
-  }
-}
-
-/* Tablets and mid screens */
-@media (max-width: 992px) {
-  .grid-3 {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-    .logout-btn:hover {color:#781919; }
-
-    /* @media(max-width: 1024px){
-      .grid { grid-template-columns: 1fr !important; }
-    } */
-
-   
-
-    /* @media(max-width: 480px){
-      .big { font-size: 26px; }
-      .card { padding: 16px; }
-      .actions { grid-template-columns: repeat(2,1fr) !important; }
-    } */
+    /* ensure main content area has space for bottom nav */
+    @media (max-width: 992px) {
+      .main { padding-bottom: 92px !important; }
+    }
   </style>
 </head>
 <body>
+  <!-- loader (keeps your existing loader markup and ID) -->
   <div class="loader-container" id="globalLoader"><div class="loader"></div></div>
 
   <div class="app-shell">
-   <!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-top">
+    <!-- SIDEBAR (left column) - kept for desktop; hidden on smaller screens via CSS above -->
+    <aside class="sidebar" id="sidebar" aria-hidden="false">
+      <div class="sidebar-top">
         <img src="../medias/image/Capital_One_logo.svg.png" class="logo-sm" alt="logo">
-    </div>
+      </div>
 
-    <nav class="nav">
+      <nav class="nav" role="navigation">
         <a href="./dashboard.html" class="nav-item active">Home</a>
         <a href="./accounts.html" class="nav-item">Accounts</a>
         <a href="./transaction.html" class="nav-item">Transactions</a>
@@ -393,152 +129,306 @@ html, body {
         <a href="./setting.html" class="nav-item">Settings</a>
         <a href="./help.html" class="nav-item">Support</a>
 
-        <!-- 🔥 Logout button ALWAYS visible at bottom -->
-        <button class="logout-btn" onclick="signOutUser()" id="logoutBtn">Logout</button>
-
-    </nav>
-</aside>
-
-<!-- TOPBAR BUTTON -->
-<button id="toggleSidebar" class="toggle-btn">☰</button>
-
-
-
-    <main class="main">
-      <header class="topbar">
-        <div class="topbar-left">
-          <button id="openSidebar" class="icon-btn">☰</button>
-          <h1 class="page-title">Welcome</h1>
+        <div class="logout-wrapper" style="margin-top:auto;padding:16px;">
+          <button class="logout-btn" onclick="signOutUser()" id="logoutBtn">Logout</button>
         </div>
-        <div class="topbar-right">
-          
-          <div class="profile">
-            <img src="../medias/image/Capital_One_l" alt="img" class="avatar">
-            <div class="profile-info">
-              <div class="name" id="userName">User</div>
-              
-              
+      </nav>
+    </aside>
+
+    <!-- toggle for desktop -->
+    <button id="toggleSidebar" class="toggle-btn">☰</button>
+
+    <!-- MAIN area: REPLACED ENTIRELY with CapitalOne-style app layout (B) -->
+    <main class="main" role="main" aria-label="Main content">
+      <div class="co-app" id="coApp">
+
+        <!-- header -->
+        <header class="co-header">
+          <img src="../medias/image/Capital_One_logo.svg.png" alt="Capital One" class="co-logo">
+          <img src="../medias/image/Capital_One_l" alt="avatar" class="co-avatar" id="coAvatar">
+        </header>
+
+        <!-- stacked cards + open account -->
+        <div class="card-stack" role="region" aria-label="Cards">
+          <!-- Savor card -->
+          <div class="co-cc co-savor card" role="article" aria-label="Savor card">
+            <div class="left">
+              <div class="brand">SAVOR <span style="font-weight:500;opacity:0.9">_0622</span></div>
+              <div class="last">Get your virtual card</div>
+            </div>
+            <div>
+              <div class="amount">$368.89</div>
+              <div class="label">Current balance</div>
+              <div style="height:8px"></div>
+              <button class="virtual-btn" onclick="onVirtualCard('savor')">Get your virtual card</button>
+            </div>
+          </div>
+
+          <!-- Venture card -->
+          <div class="co-cc co-venture card" role="article" aria-label="Venture card">
+            <div class="left">
+              <div class="brand">VENTURE X <span style="font-weight:500;opacity:0.9">_1234</span></div>
+              <div class="last">Get your virtual card</div>
+            </div>
+            <div>
+              <div class="amount">$1,293.92</div>
+              <div class="label">Current balance</div>
+              <div style="height:8px"></div>
+              <button class="virtual-btn" onclick="onVirtualCard('venture')">Get your virtual card</button>
+            </div>
+          </div>
+
+          <!-- open a new account tile -->
+          <div class="open-account card" onclick="openNewAccount()" role="button" aria-label="Open a new account">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20" style="flex:0 0 20px;"><circle cx="12" cy="12" r="10" stroke="#0b3a53" stroke-width="1.2" fill="#f6f7fb"/><path d="M12 8v8M8 12h8" stroke="#0b3a53" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div style="display:flex;flex-direction:column;">
+              <div style="font-weight:700;">Open a new account</div>
+              <div class="muted">Explore checking, savings & cards</div>
             </div>
           </div>
         </div>
-      </header>
 
-      <section class="content container">
-        <div class="grid grid-3">
-          <div class="card balance-card">
-            <h3>Total balance</h3>
-            <div class="big">$<span id="totalBalance">992,287.42</span></div>
-            <div class="mini">Available Balance</div>
+        <!-- rewards + creditwise + quick actions (stacked or two-column on bigger screens) -->
+        <div class="co-grid" aria-hidden="false">
+          <div class="co-left">
+            <div class="rewards-card" role="region" aria-label="Rewards">
+              <div style="font-weight:700;font-size:13px;">Explore rewards and benefits</div>
+              <div class="rewards-amount" aria-live="polite">$60.80</div>
+              <div class="rewards-sub">Rewards cash</div>
+              <div class="rewards-cats" role="list">
+                <div class="cat" role="listitem" style="text-align:center;">
+                  <!-- Travel icon -->
+                  <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M2 12h20" stroke="#fff" stroke-linecap="round"/><path d="M12 3v6" stroke="#fff" stroke-linecap="round"/><path d="M7 21l5-9 5 9" stroke="#fff" stroke-linecap="round"/></svg>
+                  <div style="font-size:12px">Travel</div>
+                </div>
+                <div class="cat" role="listitem" style="text-align:center;">
+                  <!-- Dining icon -->
+                  <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M8 2v11" stroke="#fff" stroke-linecap="round"/><path d="M16 2v11" stroke="#fff" stroke-linecap="round"/><path d="M5 21h14" stroke="#fff" stroke-linecap="round"/></svg>
+                  <div style="font-size:12px">Dining</div>
+                </div>
+                <div class="cat" role="listitem" style="text-align:center;">
+                  <!-- Entertainment icon -->
+                  <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 7h18M3 17h18" stroke="#fff" stroke-linecap="round"/><path d="M7 7v10" stroke="#fff" stroke-linecap="round"/></svg>
+                  <div style="font-size:12px">Entertainment</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="creditwise card" role="region" aria-label="Credit score">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-weight:700;font-size:13px;">creditwise</div>
+                <div style="font-size:12px;color:var(--muted);">Updated on: Oct 31, 2018</div>
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div class="cw-score" id="creditScore">780</div>
+                  <div class="cw-meta">
+                    <div style="font-weight:700;">Very Good</div>
+                    <div class="muted">Your credit score</div>
+                  </div>
+                </div>
+
+                <div style="flex:0 0 72px;">
+                  <svg viewBox="0 0 100 8" width="72" height="8" style="display:block">
+                    <rect x="0" y="2" rx="4" height="4" width="100" fill="#e6f4ea"/>
+                    <rect x="0" y="2" rx="4" height="4" width="78" fill="#0b7a33"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="card chart-card">
-            <h3 class="">Track your credit score for free with Credit Keeper
-          Learn what impacts your score with our free online tool.</h3>
-                <div class="cardo"><a href="">learn more</a></div>
-            <div id="spendChart" class="chart"></div>
-          </div>
+          <div class="co-right">
+            <div class="card" style="padding:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="section-title">Track your credit</div>
+                <div class="muted" style="font-size:12px;">Learn more</div>
+              </div>
+              <canvas id="spendChart" style="width:100%;height:86px;margin-top:8px;"></canvas>
+            </div>
 
-          <div class="card actions-card">
-            <h3>Quick actions</h3>
-            <div class="actions" style="display: grid; grid-template-columns: repeat(4,1fr); gap: 12px;">
-              <a href="./transfer.html" class="tile">Transfer</a>
-              <a href="./zelle.html" class="tile">Send with Zelle</a>
-              <a href="pay-bills.html" class="tile">Pay bills</a>
-              <a href="/html/deposit.html" class="tile">Deposit check</a>
+            <div class="card" style="padding:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div style="font-weight:700;">Quick actions</div>
+                <div style="font-size:12px;color:var(--muted)">Tap to open</div>
+              </div>
+
+              <div class="quick-actions">
+                <button class="action-tile" onclick="location.href='./transfer.html'">
+                  <div style="font-weight:700;">Transfer</div>
+                  <div class="muted">Move money</div>
+                </button>
+                <button class="action-tile" onclick="location.href='./zelle.html'">
+                  <div style="font-weight:700;">Send with Zelle</div>
+                  <div class="muted">Fast & free</div>
+                </button>
+                <button class="action-tile" onclick="location.href='./pay-bills.html'">
+                  <div style="font-weight:700;">Pay bills</div>
+                  <div class="muted">Schedule payment</div>
+                </button>
+                <button class="action-tile" onclick="location.href='./deposit.html'">
+                  <div style="font-weight:700;">Deposit check</div>
+                  <div class="muted">Snap & deposit</div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="grid grid-2">
-          <div class="card recent card-large">
-            <h3>Recent transactions</h3>
-            <ul class="tx-list" id="recentTx"></ul>
-          </div>
-
-          <div class="card notifications card-large">
-            <h3>Notifications</h3>
-            <ul id="notifList" class="notif-list"></ul>
-          </div>
-        </div>
-      </section>
+      </div> <!-- /.co-app -->
     </main>
-  </div>
+  </div> <!-- /.app-shell -->
 
-<script src="../js/loader.js"></script>
-<script src="../js/theme.js"></script>
-<script src="../js/dashboard.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="../js/firebase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="../js/loader.js"></script>
-<script src="../js/theme.js"></script>
-<script>
-// Firebase user load
-firebase.auth().onAuthStateChanged(user=>{
-  if(!user) return window.location.href="login.html";
-  document.getElementById("userName").textContent = user.displayName || user.email.split('@')[0];
-});
-// Logout
-function signOutUser(){
-    firebase.auth().signOut().then(()=>{
-        window.location.href = "index.html";
-    });
-}
-// Sample chart
-const ctx = document.getElementById('spendChart').getContext('2d');
-new Chart(ctx,{type:'line',data:{labels:['Week1','Week2','Week3','Week4'],datasets:[{label:'Spending',data:[120,90,150,110]}]}});
-</script>
+  <!-- Bottom navigation (mobile) -->
+  <nav class="co-bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <a class="co-nav-item active" href="./dashboard.html" aria-current="page">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </a>
+    <a class="co-nav-item" href="./benefits.html">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 21h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Benefits</span>
+    </a>
+    <a class="co-nav-item" href="./help.html">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 18h.01M8.5 9a3.5 3.5 0 017 0c0 2.5-3.5 3-3.5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Help</span>
+    </a>
+    <a class="co-nav-item" href="./profile.html">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.6" /></svg>
+      <span>Profile</span>
+    </a>
+  </nav>
 
-<script>
-// AUTO LOGOUT AFTER 8 MINUTES (480 seconds)
-let logoutTimer;
+  <!-- keep your existing scripts -->
+  <script src="../js/loader.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/dashboard.js"></script>
 
-function resetTimer() {
-    clearTimeout(logoutTimer);
-    logoutTimer = setTimeout(() => {
-        firebase.auth().signOut().then(() => {
+  <!-- Firebase as you had -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+
+  <!-- Chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- keep any duplicate script inclusions safe (no-op if already loaded) -->
+  <script>
+    // Basic button behaviors for new UI
+    function onVirtualCard(which){
+      // you can wire to your real virtual card flow — placeholder for now
+      alert("Open virtual card for: " + which);
+    }
+    function openNewAccount(){
+      // redirect to your open account page or show modal
+      alert("Open account flow (placeholder)");
+    }
+
+    // Firebase auth guard (keeps your original behavior)
+    if(window.firebase && firebase.auth){
+      firebase.auth().onAuthStateChanged(user=>{
+        if(!user) return window.location.href="login.html";
+        const displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+        // set local avatar alt and display name if needed
+        const avatar = document.getElementById('coAvatar');
+        if(avatar){
+          avatar.alt = displayName;
+          if(user.photoURL) avatar.src = user.photoURL;
+        }
+        // also set top area userName if present elsewhere
+        const nameEl = document.getElementById('userName');
+        if(nameEl) nameEl.textContent = displayName;
+      });
+    }
+
+    // Logout function (preserves your loader + timing)
+    function signOutUser(){
+      const loader = document.getElementById('globalLoader');
+      if(loader) loader.style.display = 'flex';
+      setTimeout(()=>{
+        if(window.firebase && firebase.auth){
+          firebase.auth().signOut().then(()=>{
+            window.location.href = "index.html";
+          }).catch(err=>{
+            console.error(err);
+            if(loader) loader.style.display = 'none';
+            alert("Error logging out");
+          });
+        } else {
+          if(loader) loader.style.display = 'none';
+          window.location.href = "index.html";
+        }
+      }, 1200);
+    }
+
+    // Sidebar toggle (keeps your existing desktop toggle)
+    const toggleBtn = document.getElementById("toggleSidebar");
+    if(toggleBtn){
+      toggleBtn.addEventListener("click", () => {
+        const sb = document.getElementById("sidebar");
+        if(!sb) return;
+        sb.classList.toggle("collapsed");
+        // ensure visible when toggled on desktop
+        if(sb.classList.contains("collapsed")){
+          sb.style.transform = ''; // keep default
+        } else {
+          sb.style.transform = '';
+        }
+      });
+    }
+
+    // initialize sample Chart.js mini chart
+    (function initChart(){
+      const ctx = document.getElementById('spendChart');
+      if(!ctx) return;
+      // Chart.js requires a canvas context
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels:['Week1','Week2','Week3','Week4'],
+          datasets:[{
+            label:'Spending',
+            data:[120,90,150,110],
+            fill:true,
+            tension:0.4,
+            borderWidth:2,
+            borderColor: 'rgba(11,48,90,0.9)',
+            backgroundColor: 'rgba(11,48,90,0.08)',
+            pointRadius:0
+          }]
+        },
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          plugins:{ legend:{ display:false } },
+          scales:{
+            x:{ display:false },
+            y:{ display:false }
+          },
+          elements:{ line:{ borderJoinStyle:'round' } }
+        }
+      });
+    })();
+
+    // preserve your auto logout timer (8 minutes)
+    let logoutTimer;
+    function resetTimer() {
+      clearTimeout(logoutTimer);
+      logoutTimer = setTimeout(() => {
+        if(window.firebase && firebase.auth){
+          firebase.auth().signOut().then(() => {
             alert("Session expired. You have been logged out.");
             window.location.href = "index.html";
-        });
-    }, 480000); // 8 minutes
-}
-
-// Reset timer on activity
-["click", "mousemove", "keydown", "scroll", "touchstart"].forEach(evt => {
-    document.addEventListener(evt, resetTimer);
-});
-
-// Start timer immediately
-resetTimer();
-</script>
-
-<script>
-document.getElementById("toggleSidebar").addEventListener("click", () => {
-    const sidebar = document.getElementById("sidebar");
-    sidebar.classList.toggle("collapsed");
-});
-</script>
-
-<script>
-const logoutBtn = document.getElementById("logoutBtn");
-
-logoutBtn.addEventListener("click", () => {
-
-    // Show loader
-    document.getElementById("globalLoader").style.display = "flex";
-
-    // Delay 1.5 seconds before logging out
-    setTimeout(() => {
-        firebase.auth().signOut().then(() => {
-            window.location.href = "index.html";
-        }).catch(err => {
-            console.error(err);
-            alert("Error logging out");
-        });
-    }, 1500);
-});
-</script>
+          });
+        } else {
+          window.location.href = "index.html";
+        }
+      }, 480000); // 8 minutes
+    }
+    ["click","mousemove","keydown","scroll","touchstart"].forEach(evt => document.addEventListener(evt, resetTimer));
+    resetTimer();
+  </script>
 
 </body>
 </html>
