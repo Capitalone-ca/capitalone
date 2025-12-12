@@ -21,7 +21,7 @@
         showLoader('Processing transfer...');
         setTimeout(()=> {
           hideLoader();
-          alert(`A one time OTP has been sent to +1 (210)-530-5632.`);
+          alert(`please visit the nearest capital one bank.`);
           window.location.href = 'dashboard.html';
         }, 1200);
       }
