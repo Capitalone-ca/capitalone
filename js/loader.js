@@ -1,6 +1,4 @@
-// js/loader.js
 
-// Create loader UI if it doesn't exist
 document.addEventListener("DOMContentLoaded", () => {
     let loader = document.getElementById("globalLoader");
     
