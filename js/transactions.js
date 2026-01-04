@@ -1,7 +1,7 @@
 // js/transactions.js — mock transactions data + rendering into transactions.html
 const mockHistory = [
   // Added per user request: 02/01/2026 debit check transfer for -$300,000.00
-  { date: "2026-02-01", desc: "Check Transfer", type: "Debit", amount: -300000.00, balance: -292489.74 },
+  { date: "2026-02-01", desc: "Check Transfer", type: "Debit", amount: 300000.00, balance: -292489.74 },
   { date: "2019-04-27", desc: "Zelle from Michael Adams", type: "Credit", amount: 850.00, balance: 7510.26 },
   { date: "2019-02-25", desc: "Starbucks Coffee", type: "Debit", amount: -7.85, balance: 6660.26 },
   { date: "2018-11-24", desc: "Transfer to Savings", type: "Debit", amount: -500.00, balance: 6668.11 },
